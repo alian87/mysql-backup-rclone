@@ -1,0 +1,109 @@
+# MySQL Backup with Rclone - Docker Compose
+# For development and testing purposes
+# 
+# Usage:
+#   docker-compose up -d
+#   docker-compose logs -f
+#   docker-compose down
+
+version: '3.8'
+
+services:
+  mysql-backup:
+    build: .
+    container_name: mysql-backup-rclone
+    restart: unless-stopped
+    
+    environment:
+      # MySQL Configuration
+      MYSQL_HOST: "mysql"
+      MYSQL_PORT: 3306
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "password123"
+      MYSQL_DATABASES: "testdb,anotherdb"
+      
+      # Rclone Configuration
+      RCLONE_REMOTE: "gdrive:backups/mysql"
+      
+      # Backup Configuration
+      CRON_SCHEDULE: "0 2 * * *"  # Daily at 2 AM
+      BACKUP_RETENTION: 5
+      TZ: "America/Sao_Paulo"
+      LOG_LEVEL: "INFO"
+      
+      # Optional: Webhook for notifications
+      # WEBHOOK_URL: "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+    
+    volumes:
+      # Rclone configuration (required)
+      - rclone_config:/root/.config/rclone
+      
+      # Backup storage (optional, for persistence)
+      - backup_data:/backup
+      
+      # Logs (optional, for persistence)
+      - ./logs:/var/log
+    
+    networks:
+      - mysql-network
+    
+    depends_on:
+      - mysql
+    
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /var/log/cron.log && pgrep cron > /dev/null"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  # Example MySQL server for testing
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-server
+    restart: unless-stopped
+    
+    environment:
+      MYSQL_ROOT_PASSWORD: "password123"
+      MYSQL_DATABASE: "testdb"
+      MYSQL_USER: "testuser"
+      MYSQL_PASSWORD: "testpass"
+    
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./examples/mysql-init:/docker-entrypoint-initdb.d
+    
+    networks:
+      - mysql-network
+    
+    ports:
+      - "3306:3306"
+    
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  rclone_config:
+    driver: local
+  backup_data:
+    driver: local
+  mysql_data:
+    driver: local
+
+networks:
+  mysql-network:
+    driver: bridge

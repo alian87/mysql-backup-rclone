@@ -1,0 +1,90 @@
+# MySQL Backup with Rclone - Example Docker Swarm Stack
+# Copy this file to stack.yml and customize for your needs
+
+version: '3.8'
+
+services:
+  mysql-backup:
+    image: yourusername/mysql-backup-rclone:latest
+    
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      
+      # Resource limits
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+      
+      # Placement constraints (optional)
+      placement:
+        constraints:
+          - node.role == manager
+        preferences:
+          - spread: node.labels.backup
+    
+    environment:
+      # MySQL Configuration - REQUIRED
+      MYSQL_HOST: "your-mysql-host"
+      MYSQL_PORT: 3306
+      MYSQL_USER: "your-mysql-user"
+      MYSQL_PASSWORD: "your-mysql-password"
+      MYSQL_DATABASES: "database1,database2,database3"
+      
+      # Rclone Configuration - REQUIRED
+      RCLONE_REMOTE: "gdrive:backups/mysql"
+      
+      # Backup Configuration - OPTIONAL
+      CRON_SCHEDULE: "0 2 * * *"  # Daily at 2 AM
+      BACKUP_RETENTION: 7          # Keep 7 local backups
+      TZ: "America/Sao_Paulo"      # Timezone
+      LOG_LEVEL: "INFO"            # Log level: DEBUG, INFO, WARN, ERROR
+      
+      # Webhook Notifications - OPTIONAL
+      # WEBHOOK_URL: "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+    
+    volumes:
+      # Rclone configuration - REQUIRED
+      - rclone_config:/root/.config/rclone
+      
+      # Backup storage - OPTIONAL (for persistence)
+      - backup_data:/backup
+    
+    networks:
+      - mysql-network
+    
+    # Health check
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /var/log/cron.log && pgrep cron > /dev/null"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  rclone_config:
+    external: true
+    driver: local
+  backup_data:
+    driver: local
+
+networks:
+  mysql-network:
+    external: true
+    driver: overlay

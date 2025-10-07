@@ -1,0 +1,90 @@
+# MySQL Backup com Rclone - Exemplo Docker Swarm Stack
+# Copie este arquivo para stack.yml e personalize para suas necessidades
+
+version: '3.8'
+
+services:
+  mysql-backup:
+    image: yourusername/mysql-backup-rclone:latest
+    
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      
+      # Limites de recursos
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+      
+      # Restrições de posicionamento (opcional)
+      placement:
+        constraints:
+          - node.role == manager
+        preferences:
+          - spread: node.labels.backup
+    
+    environment:
+      # Configuração MySQL - OBRIGATÓRIO
+      MYSQL_HOST: "seu-host-mysql"
+      MYSQL_PORT: 3306
+      MYSQL_USER: "seu-usuario-mysql"
+      MYSQL_PASSWORD: "sua-senha-mysql"
+      MYSQL_DATABASES: "banco1,banco2,banco3"
+      
+      # Configuração Rclone - OBRIGATÓRIO
+      RCLONE_REMOTE: "gdrive:backups/mysql"
+      
+      # Configuração de Backup - OPCIONAL
+      CRON_SCHEDULE: "0 2 * * *"  # Diariamente às 2h da manhã
+      BACKUP_RETENTION: 7          # Manter 7 backups locais
+      TZ: "America/Sao_Paulo"      # Fuso horário
+      LOG_LEVEL: "INFO"            # Nível de log: DEBUG, INFO, WARN, ERROR
+      
+      # Notificações Webhook - OPCIONAL
+      # WEBHOOK_URL: "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+    
+    volumes:
+      # Configuração rclone - OBRIGATÓRIO
+      - rclone_config:/root/.config/rclone
+      
+      # Armazenamento de backup - OPCIONAL (para persistência)
+      - backup_data:/backup
+    
+    networks:
+      - mysql-network
+    
+    # Verificação de saúde
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /var/log/cron.log && pgrep cron > /dev/null"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    
+    # Configuração de logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  rclone_config:
+    external: true
+    driver: local
+  backup_data:
+    driver: local
+
+networks:
+  mysql-network:
+    external: true
+    driver: overlay

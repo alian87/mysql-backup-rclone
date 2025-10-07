@@ -1,0 +1,70 @@
+# Docker
+.dockerignore
+
+# Logs
+logs/
+*.log
+
+# Backup files
+backup/
+*.sql
+*.sql.gz
+
+# Rclone configuration (sensitive)
+rclone.conf
+.rclone.conf
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Node modules (if any)
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# Test coverage
+coverage/
+.coverage
+htmlcov/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Secrets and credentials
+secrets/
+credentials/
+*.pem
+*.key
+*.crt
+
+# Local development
+docker-compose.override.yml
+docker-compose.local.yml
