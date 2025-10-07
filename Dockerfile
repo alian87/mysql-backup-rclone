@@ -51,8 +51,7 @@ RUN mkdir -p $BACKUP_DIR /scripts /var/log
 WORKDIR /scripts
 
 # Copy scripts
-COPY src/backup.sh /scripts/backup.sh
-COPY src/entrypoint.sh /scripts/entrypoint.sh
+COPY src/ /scripts/
 
 # Make scripts executable
 RUN chmod +x /scripts/backup.sh /scripts/entrypoint.sh
