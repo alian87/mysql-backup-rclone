@@ -432,6 +432,6 @@ When asking for help, include:
 ### Support Channels
 
 - 📖 [Documentation](README.md)
-- 🐛 [GitHub Issues](https://github.com/yourusername/mysql-backup-rclone/issues)
-- 💬 [GitHub Discussions](https://github.com/yourusername/mysql-backup-rclone/discussions)
-- 📧 [Email Support](mailto:your.email@example.com)
+- 🐛 [GitHub Issues](https://github.com/alian87/mysql-backup-rclone/issues)
+- 💬 [GitHub Discussions](https://github.com/alian87/mysql-backup-rclone/discussions)
+- 📧 [Email Support](mailto:alian87@example.com)

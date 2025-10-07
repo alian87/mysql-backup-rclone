@@ -7,10 +7,10 @@
 FROM debian:bookworm-slim
 
 # Metadata
-LABEL maintainer="Your Name <your.email@example.com>"
+LABEL maintainer="Alian <alian.v.p.87@gmail.com>"
 LABEL description="Automated MySQL backup to Google Drive using Rclone"
 LABEL version="1.0.0"
-LABEL org.opencontainers.image.source="https://github.com/yourusername/mysql-backup-rclone"
+LABEL org.opencontainers.image.source="https://github.com/alian87/mysql-backup-rclone"
 
 # Environment variables with defaults
 ENV TZ=America/Sao_Paulo \

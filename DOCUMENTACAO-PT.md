@@ -29,7 +29,7 @@ Bem-vindo à documentação completa do **MySQL Backup Rclone** em português! E
 
 ```bash
 # Clonar o repositório
-git clone https://github.com/yourusername/mysql-backup-rclone.git
+git clone https://github.com/alian87/mysql-backup-rclone.git
 cd mysql-backup-rclone
 
 # Configurar Rclone
@@ -204,9 +204,9 @@ secrets:
 ### Canais de Ajuda
 
 - 📖 **Documentação**: Este arquivo e links acima
-- 🐛 **Issues**: [GitHub Issues](https://github.com/yourusername/mysql-backup-rclone/issues)
-- 💬 **Discussões**: [GitHub Discussions](https://github.com/yourusername/mysql-backup-rclone/discussions)
-- 📧 **Email**: your.email@example.com
+- 🐛 **Issues**: [GitHub Issues](https://github.com/alian87/mysql-backup-rclone/issues)
+- 💬 **Discussões**: [GitHub Discussions](https://github.com/alian87/mysql-backup-rclone/discussions)
+- 📧 **Email**: alian.v.p.87@gmail.com
 
 ### Antes de Pedir Ajuda
 

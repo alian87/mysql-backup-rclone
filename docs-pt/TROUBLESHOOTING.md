@@ -432,6 +432,6 @@ Ao pedir ajuda, inclua:
 ### Canais de Suporte
 
 - 📖 [Documentação](README-pt.md)
-- 🐛 [Issues do GitHub](https://github.com/yourusername/mysql-backup-rclone/issues)
-- 💬 [Discussões do GitHub](https://github.com/yourusername/mysql-backup-rclone/discussions)
-- 📧 [Suporte por Email](mailto:your.email@example.com)
+- 🐛 [Issues do GitHub](https://github.com/alian87/mysql-backup-rclone/issues)
+- 💬 [Discussões do GitHub](https://github.com/alian87/mysql-backup-rclone/discussions)
+- 📧 [Suporte por Email](mailto:alian.v.p.87@gmail.com)

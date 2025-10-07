@@ -84,7 +84,7 @@ docker run -d \
   -e MYSQL_HOST=mysql-server \
   -e MYSQL_DATABASES=db1,db2 \
   -v rclone_config:/root/.config/rclone \
-  yourusername/mysql-backup-rclone:latest
+  alian87/mysql-backup-rclone:latest
 ```
 
 ## 🔒 Funcionalidades de Segurança

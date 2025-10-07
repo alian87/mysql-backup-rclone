@@ -16,7 +16,7 @@ Obrigado pelo seu interesse em contribuir para o MySQL Backup Rclone! Este docum
 1. **Fazer fork do repositório**
    ```bash
    # Fazer fork no GitHub, depois clonar seu fork
-   git clone https://github.com/yourusername/mysql-backup-rclone.git
+   git clone https://github.com/alian87/mysql-backup-rclone.git
    cd mysql-backup-rclone
    ```
 

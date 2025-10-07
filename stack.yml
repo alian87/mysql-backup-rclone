@@ -10,7 +10,7 @@ version: '3.8'
 
 services:
   mysql-backup:
-    image: yourusername/mysql-backup-rclone:latest
+    image: alian87/mysql-backup-rclone:latest
     # Alternative: build from local Dockerfile
     # build: .
     

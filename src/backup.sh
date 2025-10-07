@@ -2,7 +2,7 @@
 # MySQL Backup Script with Rclone
 # Automated backup of MySQL databases to Google Drive
 # 
-# Author: Your Name
+# Author: Alian
 # Version: 1.0.0
 # License: MIT
 

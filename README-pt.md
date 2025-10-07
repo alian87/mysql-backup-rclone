@@ -43,7 +43,7 @@ docker run --rm -it -v rclone_config:/root/.config/rclone rclone/rclone:latest c
 
 ```bash
 # Clonar o repositório
-git clone https://github.com/yourusername/mysql-backup-rclone.git
+git clone https://github.com/alian87/mysql-backup-rclone.git
 cd mysql-backup-rclone
 
 # Copiar e personalizar o exemplo
@@ -149,7 +149,7 @@ docker run -d \
   -e MYSQL_DATABASES=db1,db2,db3 \
   -e RCLONE_REMOTE=gdrive:backups/mysql \
   -v rclone_config:/root/.config/rclone \
-  yourusername/mysql-backup-rclone:latest
+  alian87/mysql-backup-rclone:latest
 ```
 
 ### Com Notificações
@@ -165,7 +165,7 @@ docker run -d \
   -e WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL \
   -e CRON_SCHEDULE="0 2 * * *" \
   -v rclone_config:/root/.config/rclone \
-  yourusername/mysql-backup-rclone:latest
+  alian87/mysql-backup-rclone:latest
 ```
 
 ### Backup Manual
@@ -263,7 +263,7 @@ O container fornece métricas básicas através dos logs:
 version: '3.8'
 services:
   mysql-backup:
-    image: yourusername/mysql-backup-rclone:latest
+    image: alian87/mysql-backup-rclone:latest
     secrets:
       - mysql_password
     environment:
@@ -361,7 +361,7 @@ docker run -e LOG_LEVEL=DEBUG ... mysql-backup-rclone
 
 ```bash
 # Clonar o repositório
-git clone https://github.com/yourusername/mysql-backup-rclone.git
+git clone https://github.com/alian87/mysql-backup-rclone.git
 cd mysql-backup-rclone
 
 # Construir a imagem
@@ -385,9 +385,9 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 ## 📞 Suporte
 
 - 📖 [Documentação](docs/)
-- 🐛 [Rastreador de Issues](https://github.com/yourusername/mysql-backup-rclone/issues)
-- 💬 [Discussões](https://github.com/yourusername/mysql-backup-rclone/discussions)
-- 📧 [Email](mailto:your.email@example.com)
+- 🐛 [Rastreador de Issues](https://github.com/alian87/mysql-backup-rclone/issues)
+- 💬 [Discussões](https://github.com/alian87/mysql-backup-rclone/discussions)
+- 📧 [Email](mailto:alian87@example.com)
 
 ---
 
