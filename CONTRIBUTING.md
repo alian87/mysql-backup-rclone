@@ -267,7 +267,7 @@ Any ideas on how this could be implemented?
 
 ### Reporting Security Issues
 
-Email security issues to: security@example.com
+Email security issues to: alian.v.p.87@gmail.com
 
 Do not create public issues for security vulnerabilities.
 

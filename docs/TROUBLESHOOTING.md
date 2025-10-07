@@ -434,4 +434,4 @@ When asking for help, include:
 - 📖 [Documentation](README.md)
 - 🐛 [GitHub Issues](https://github.com/alian87/mysql-backup-rclone/issues)
 - 💬 [GitHub Discussions](https://github.com/alian87/mysql-backup-rclone/discussions)
-- 📧 [Email Support](mailto:alian87@example.com)
+- 📧 [Email Support](mailto:alian.v.p.87@gmail.com)

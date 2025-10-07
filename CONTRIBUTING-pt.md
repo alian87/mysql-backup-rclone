@@ -267,7 +267,7 @@ Alguma ideia de como isso poderia ser implementado?
 
 ### Reportando Problemas de Segurança
 
-Enviar problemas de segurança para: security@example.com
+Enviar problemas de segurança para: alian.v.p.87@gmail.com
 
 Não criar issues públicas para vulnerabilidades de segurança.
 
