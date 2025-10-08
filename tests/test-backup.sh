@@ -130,23 +130,27 @@ docker run -d \
 log_info "Waiting for MySQL to be ready..."
 timeout=60
 while [ $timeout -gt 0 ]; do
-    if docker exec "$MYSQL_CONTAINER" mysqladmin ping -h localhost --silent; then
+    if docker exec "$MYSQL_CONTAINER" mysqladmin ping -h localhost --silent 2>/dev/null; then
         break
     fi
-    sleep 1
-    timeout=$((timeout - 1))
+    sleep 2
+    timeout=$((timeout - 2))
 done
 
-if [ $timeout -eq 0 ]; then
+if [ $timeout -le 0 ]; then
     log_error "MySQL failed to start within 60 seconds"
     exit 1
 fi
+
+# Wait additional time for MySQL to fully initialize
+log_info "MySQL is initializing, waiting additional 10 seconds..."
+sleep 10
 
 log_success "MySQL is ready"
 
 # Create test databases and data
 log_info "Creating test databases and data..."
-docker exec "$MYSQL_CONTAINER" mysql -u root -ptestpass -h 127.0.0.1 -e "
+docker exec "$MYSQL_CONTAINER" mysql -u root -ptestpass -e "
 CREATE DATABASE IF NOT EXISTS backup_test_db2;
 USE backup_test_db;
 CREATE TABLE IF NOT EXISTS test_table (id INT PRIMARY KEY, name VARCHAR(50));
