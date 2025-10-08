@@ -154,10 +154,11 @@ Error: Failed to create file system for "gdrive:": didn't find section in config
 **Solution:**
 ```bash
 # Reconfigure rclone
-docker run --rm -it -v rclone_config:/root/.config/rclone rclone/rclone:latest config
+docker run --rm -it --entrypoint bash -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest
+# Inside the container, run: rclone config
 
 # Test configuration
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest lsd gdrive:
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest lsd gdrive:
 ```
 
 **2. Google Drive API Issues**

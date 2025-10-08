@@ -18,8 +18,11 @@ docker volume create rclone_config
 ## Step 2: Configure Rclone
 
 ```bash
-# Run rclone config in a temporary container
-docker run --rm -it -v rclone_config:/root/.config/rclone rclone/rclone:latest config
+# Run rclone config in a temporary container using the backup image
+docker run --rm -it --entrypoint bash -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest
+
+# Inside the container, run:
+# rclone config
 ```
 
 ## Step 3: Follow the Configuration Wizard
@@ -53,7 +56,7 @@ When prompted, follow these steps:
 
 ```bash
 # Test the configuration
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest lsd gdrive:
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest lsd gdrive:
 ```
 
 You should see your Google Drive folders listed.
@@ -62,7 +65,7 @@ You should see your Google Drive folders listed.
 
 ```bash
 # Create a backups directory in Google Drive
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest mkdir gdrive:backups
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest mkdir gdrive:backups
 ```
 
 ## Alternative: Manual Configuration
@@ -97,19 +100,19 @@ EOF'
 
 ```bash
 # List remotes
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest listremotes
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest listremotes
 
 # Test connection
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest about gdrive:
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest about gdrive:
 
 # List files
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest ls gdrive:
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest ls gdrive:
 
 # Create directory
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest mkdir gdrive:backups
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest mkdir gdrive:backups
 
 # Delete directory (be careful!)
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest rmdir gdrive:backups
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest rmdir gdrive:backups
 ```
 
 ## Security Notes

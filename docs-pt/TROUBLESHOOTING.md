@@ -33,7 +33,8 @@ Erro: Rclone configuration not found at /root/.config/rclone/rclone.conf
 ```bash
 # Criar e configurar volume do rclone
 docker volume create rclone_config
-docker run --rm -it -v rclone_config:/root/.config/rclone rclone/rclone:latest config
+docker run --rm -it --entrypoint bash -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest
+# Dentro do container, execute: rclone config
 ```
 
 **2. Variáveis de Ambiente Inválidas**
@@ -154,10 +155,11 @@ Erro: Failed to create file system for "gdrive:": didn't find section in config 
 **Solução:**
 ```bash
 # Reconfigurar rclone
-docker run --rm -it -v rclone_config:/root/.config/rclone rclone/rclone:latest config
+docker run --rm -it --entrypoint bash -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest
+# Dentro do container, execute: rclone config
 
 # Testar configuração
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest lsd gdrive:
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest lsd gdrive:
 ```
 
 **2. Problemas da API do Google Drive**

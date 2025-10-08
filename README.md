@@ -36,7 +36,7 @@ A robust, production-ready Docker container for automated MySQL database backups
 docker volume create rclone_config
 
 # Configure rclone (follow the interactive setup)
-docker run --rm -it -v rclone_config:/root/.config/rclone rclone/rclone:latest config
+docker run --rm -it --entrypoint bash -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest
 ```
 
 ### 2. Run with Docker Compose

@@ -11,7 +11,7 @@ Automated MySQL database backup to Google Drive using Rclone. Production-ready D
 docker volume create rclone_config
 
 # Configure rclone
-docker run --rm -it -v rclone_config:/root/.config/rclone rclone/rclone:latest config
+docker run --rm -it --entrypoint bash -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest
 ```
 
 ### 2. Run Backup Container

@@ -18,8 +18,11 @@ docker volume create rclone_config
 ## Passo 2: Configurar Rclone
 
 ```bash
-# Executar configuração do rclone em container temporário
-docker run --rm -it -v rclone_config:/root/.config/rclone rclone/rclone:latest config
+# Executar configuração do rclone em container temporário usando a imagem de backup
+docker run --rm -it --entrypoint bash -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest
+
+# Dentro do container, execute:
+# rclone config
 ```
 
 ## Passo 3: Seguir o Assistente de Configuração
@@ -53,7 +56,7 @@ Quando solicitado, siga estes passos:
 
 ```bash
 # Testar a configuração
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest lsd gdrive:
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest lsd gdrive:
 ```
 
 Você deve ver suas pastas do Google Drive listadas.
@@ -62,7 +65,7 @@ Você deve ver suas pastas do Google Drive listadas.
 
 ```bash
 # Criar diretório de backups no Google Drive
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest mkdir gdrive:backups
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest mkdir gdrive:backups
 ```
 
 ## Alternativa: Configuração Manual
@@ -97,19 +100,19 @@ EOF'
 
 ```bash
 # Listar remotos
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest listremotes
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest listremotes
 
 # Testar conexão
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest about gdrive:
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest about gdrive:
 
 # Listar arquivos
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest ls gdrive:
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest ls gdrive:
 
 # Criar diretório
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest mkdir gdrive:backups
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest mkdir gdrive:backups
 
 # Deletar diretório (cuidado!)
-docker run --rm -v rclone_config:/root/.config/rclone rclone/rclone:latest rmdir gdrive:backups
+docker run --rm --entrypoint rclone -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest rmdir gdrive:backups
 ```
 
 ## Notas de Segurança
