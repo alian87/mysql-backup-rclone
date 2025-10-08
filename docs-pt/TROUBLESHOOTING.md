@@ -35,6 +35,8 @@ Erro: Rclone configuration not found at /root/.config/rclone/rclone.conf
 docker volume create rclone_config
 docker run --rm -it --entrypoint bash -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest
 # Dentro do container, execute: rclone config
+# ⚠️ Para autenticação, você precisará de rclone instalado localmente
+# Ver guia completo: ../examples-pt/configuracao-rclone.md
 ```
 
 **2. Variáveis de Ambiente Inválidas**

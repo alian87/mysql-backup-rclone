@@ -23,14 +23,14 @@ services:
         max_attempts: 3
         window: 120s
       
-      # Resource limits
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
+      # Resource limits - TEMPORARIAMENTE DESABILITADO PARA TESTES
+      # resources:
+      #   limits:
+      #     cpus: '0.5'
+      #     memory: 1G
+      #   reservations:
+      #     cpus: '0.25'
+      #     memory: 256M
       
       # Placement constraints (optional)
       placement:
@@ -55,6 +55,9 @@ services:
       BACKUP_RETENTION: 7
       TZ: "America/Sao_Paulo"
       LOG_LEVEL: "INFO"
+      
+      # Optional: Skip connectivity tests (useful for troubleshooting)
+      SKIP_CONNECTIVITY_TEST: "true"  # Ativado temporariamente
       
       # Optional: Webhook for notifications
       # WEBHOOK_URL: "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"

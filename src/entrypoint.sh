@@ -2,8 +2,8 @@
 # MySQL Backup Container Entrypoint
 # Initializes the backup container and starts the cron service
 # 
-# Author: Your Name
-# Version: 1.0.0
+# Author: Alian
+# Version: 2.0.9
 # License: MIT
 
 set -euo pipefail
@@ -13,7 +13,7 @@ log() {
     local level=$1
     shift
     local message="$*"
-    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    local timestamp=$(TZ="${TZ:-UTC}" date '+%Y-%m-%d %H:%M:%S')
     echo "[$timestamp] [$level] $message"
 }
 
@@ -89,19 +89,53 @@ setup_cron() {
     touch /var/log/cron.log
     chmod 644 /var/log/cron.log
     
-    # Create cron job
-    local cron_job="$CRON_SCHEDULE root /scripts/backup.sh >> /var/log/cron.log 2>&1"
-    echo "$cron_job" > /etc/cron.d/backup
-    chmod 0644 /etc/cron.d/backup
+    # Export environment variables to a file that will be sourced by the cron job
+    cat > /etc/environment_backup << EOF
+export MYSQL_HOST="${MYSQL_HOST:-localhost}"
+export MYSQL_PORT="${MYSQL_PORT:-3306}"
+export MYSQL_USER="${MYSQL_USER:-root}"
+export MYSQL_PASSWORD="${MYSQL_PASSWORD:-}"
+export MYSQL_DATABASES="${MYSQL_DATABASES:-}"
+export RCLONE_REMOTE="${RCLONE_REMOTE:-}"
+export BACKUP_DIR="${BACKUP_DIR:-/backup}"
+export BACKUP_RETENTION="${BACKUP_RETENTION:-5}"
+export TZ="${TZ:-UTC}"
+export LOG_LEVEL="${LOG_LEVEL:-INFO}"
+export WEBHOOK_URL="${WEBHOOK_URL:-}"
+export PATH="/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
+EOF
     
-    # Install cron job
-    crontab /etc/cron.d/backup
+    chmod 644 /etc/environment_backup
+    
+    # Create wrapper script that sources environment and runs backup
+    cat > /scripts/backup_wrapper.sh << 'EOF'
+#!/bin/bash
+# Source environment variables
+source /etc/environment_backup
+# Run backup script
+/scripts/backup.sh >> /var/log/cron.log 2>&1
+EOF
+    
+    chmod +x /scripts/backup_wrapper.sh
+    
+    # Install crontab for root user (more reliable in containers than /etc/cron.d/)
+    echo "${CRON_SCHEDULE} /scripts/backup_wrapper.sh" | crontab -
+    
+    # Verify crontab was installed
+    log "DEBUG" "Crontab contents:"
+    crontab -l | while read line; do log "DEBUG" "  $line"; done
     
     log "INFO" "✅ Cron job configured: $CRON_SCHEDULE"
 }
 
 # Test connectivity
 test_connectivity() {
+    # Skip if SKIP_CONNECTIVITY_TEST is set
+    if [ "${SKIP_CONNECTIVITY_TEST:-false}" = "true" ]; then
+        log "INFO" "⏭️ Skipping connectivity tests (SKIP_CONNECTIVITY_TEST=true)"
+        return 0
+    fi
+    
     log "INFO" "🔗 Testing connectivity..."
     
     # Test MySQL connection
@@ -158,9 +192,19 @@ main() {
     log "INFO" "Starting cron daemon..."
     cron
     
-    # Follow logs
-    log "INFO" "Following logs (Ctrl+C to stop)..."
-    tail -f /var/log/cron.log
+    # Keep container alive by monitoring cron process
+    log "INFO" "Container is running. Monitoring cron daemon..."
+    log "INFO" "Use 'docker service logs -f <service-name>' to see backup logs"
+    log "INFO" ""
+    
+    # Keep container alive - check cron every minute
+    while true; do
+        if ! pgrep -x cron > /dev/null 2>&1; then
+            log "WARN" "Cron daemon not running! Starting..."
+            cron
+        fi
+        sleep 60
+    done
 }
 
 # Handle signals

@@ -35,6 +35,8 @@ cd mysql-backup-rclone
 # Configurar Rclone
 docker volume create rclone_config
 docker run --rm -it --entrypoint bash -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest
+# Dentro do container execute: rclone config
+# ⚠️ Ver guia completo: examples-pt/configuracao-rclone.md
 
 # Usar exemplo de configuração
 cp examples-pt/docker-compose.exemplo.yml docker-compose.yml

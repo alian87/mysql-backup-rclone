@@ -80,11 +80,9 @@ services:
 volumes:
   rclone_config:
     external: true
-    driver: local
   backup_data:
     driver: local
 
 networks:
   mysql-network:
     external: true
-    driver: overlay

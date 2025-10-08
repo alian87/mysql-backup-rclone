@@ -37,6 +37,13 @@ docker volume create rclone_config
 
 # Configure rclone (follow the interactive setup)
 docker run --rm -it --entrypoint bash -v rclone_config:/root/.config/rclone alian87/mysql-backup-rclone:latest
+
+# ⚠️ IMPORTANT: For Google Drive authentication, you'll need:
+# 1. Install rclone on your local machine (https://rclone.org/downloads/)
+# 2. Copy and run the EXACT 'rclone authorize' command shown by the container
+#    (each configuration generates a unique code - don't use examples!)
+# 3. Paste the generated token back into the container
+# See detailed guide: examples/rclone-setup.md
 ```
 
 ### 2. Run with Docker Compose

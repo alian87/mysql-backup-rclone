@@ -41,10 +41,64 @@ Quando solicitado, siga estes passos:
 
 ## Passo 4: Autenticar com Google
 
-1. Uma janela do navegador abrirá (ou você receberá uma URL para visitar)
-2. Faça login na sua conta Google
-3. Conceda permissões ao Rclone
-4. Copie o código de autorização de volta para o terminal
+⚠️ **Importante**: Como você está dentro de um container, precisa usar uma máquina local com rclone instalado e navegador web disponível.
+
+### 4.1. O rclone mostrará algo assim:
+
+```
+Option config_token.
+For this to work, you will need rclone available on a machine that has
+a web browser available.
+For more help and alternate methods see: https://rclone.org/remote_setup/
+Execute the following on the machine with the web browser (same rclone
+version recommended):
+        rclone authorize "drive" "eyJzY29wZSI6ImRyaXZlIn0"
+Then paste the result.
+Enter a value.
+config_token>
+```
+
+⚠️ **IMPORTANTE**: O código `"eyJzY29wZSI6ImRyaXZlIn0"` acima é apenas um **exemplo**. Cada configuração gera um código único. **Use o código EXATO que aparecer no seu terminal!**
+
+### 4.2. Instalar rclone na sua máquina local (se ainda não tiver):
+
+**Windows:**
+```powershell
+# Usando chocolatey
+choco install rclone
+
+# OU baixar manualmente de: https://rclone.org/downloads/
+```
+
+**Linux:**
+```bash
+# Ubuntu/Debian
+sudo apt install rclone
+
+# OU
+curl https://rclone.org/install.sh | sudo bash
+```
+
+**macOS:**
+```bash
+brew install rclone
+```
+
+### 4.3. Executar o comando de autorização:
+
+1. **Copie o comando COMPLETO** que apareceu no container (algo como: `rclone authorize "drive" "eyJzY29wZSI6ImRyaXZlIn0"`)
+   - ⚠️ **Não use o exemplo acima!** Copie o comando exato do seu terminal
+2. **Execute na sua máquina local** (fora do container) o comando que você copiou
+3. Uma **janela do navegador abrirá automaticamente**
+4. **Faça login** na sua conta Google
+5. **Autorize** o acesso ao Google Drive
+6. O terminal mostrará um **token** (um código JSON longo)
+
+### 4.4. Colar o token de volta no container:
+
+1. **Copie todo o token** que apareceu na sua máquina local (começa com `{` e termina com `}`)
+2. **Cole no terminal do container** onde está esperando o `config_token>`
+3. Pressione Enter
 
 ## Passo 5: Completar Configuração
 

@@ -4,16 +4,17 @@
 # Build: docker build -t mysql-backup-rclone:latest .
 # Run: docker run -d --name mysql-backup mysql-backup-rclone:latest
 
-FROM debian:bookworm-slim
+FROM ubuntu:18.04
 
 # Metadata
 LABEL maintainer="Alian <alian.v.p.87@gmail.com>"
 LABEL description="Automated MySQL backup to Google Drive using Rclone"
-LABEL version="1.0.0"
+LABEL version="2.0.9"
 LABEL org.opencontainers.image.source="https://github.com/alian87/mysql-backup-rclone"
 
 # Environment variables with defaults
-ENV TZ=America/Sao_Paulo \
+ENV DEBIAN_FRONTEND=noninteractive \
+    TZ=America/Sao_Paulo \
     BACKUP_DIR=/backup \
     BACKUP_RETENTION=5 \
     RCLONE_REMOTE=gdrive:backups \
@@ -26,10 +27,6 @@ ENV TZ=America/Sao_Paulo \
     WEBHOOK_URL= \
     LOG_LEVEL=INFO
 
-# Configure timezone properly
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
-    echo $TZ > /etc/timezone
-
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     cron \
@@ -38,8 +35,17 @@ RUN apt-get update && apt-get install -y \
     unzip \
     ca-certificates \
     jq \
+    dos2unix \
+    procps \
+    bc \
+    tzdata \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
+
+# Configure timezone properly (after tzdata is installed)
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone && \
+    dpkg-reconfigure -f noninteractive tzdata
 
 # Install rclone
 RUN curl https://rclone.org/install.sh | bash
@@ -53,12 +59,20 @@ WORKDIR /scripts
 # Copy scripts
 COPY src/ /scripts/
 
-# Make scripts executable
-RUN chmod +x /scripts/backup.sh /scripts/entrypoint.sh
+# Fix line endings and make scripts executable
+RUN dos2unix /scripts/*.sh && \
+    chmod +x /scripts/*.sh && \
+    ls -la /scripts/ && \
+    echo "=== Checking entrypoint.sh ===" && \
+    file /scripts/entrypoint.sh && \
+    head -1 /scripts/entrypoint.sh && \
+    which bash && \
+    test -x /scripts/entrypoint.sh && echo "entrypoint.sh is executable" || echo "entrypoint.sh is NOT executable"
 
 # Create non-root user for security (optional)
-RUN useradd -r -s /bin/false -d /scripts backupuser && \
-    chown -R backupuser:backupuser /scripts /backup
+# Note: Commenting out for now to avoid permission issues
+# RUN useradd -r -s /bin/false -d /scripts backupuser && \
+#     chown -R backupuser:backupuser /scripts /backup
 
 # Health check
 HEALTHCHECK --interval=1m --timeout=10s --start-period=30s --retries=3 \

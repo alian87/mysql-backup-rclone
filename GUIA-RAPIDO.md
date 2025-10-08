@@ -24,7 +24,18 @@ rclone config
 # [Enter] para Service Account (deixar em branco)
 # n para Advanced config
 # y para Auto config
-# [Autentique com Google no navegador]
+# 
+# ⚠️ AUTENTICAÇÃO: O rclone mostrará um comando como:
+# rclone authorize "drive" "eyJzY29wZSI6ImRyaXZlIn0"
+# 
+# Execute esse comando na SUA MÁQUINA LOCAL (não no container):
+# 1. Instale rclone local: https://rclone.org/downloads/
+# 2. COPIE o comando EXATO que apareceu no seu terminal (cada config tem código único!)
+# 3. Execute o comando copiado na sua máquina local
+# 4. Autentique com Google no navegador que abrirá
+# 5. Copie o token JSON gerado
+# 6. Cole no container e pressione Enter
+#
 # n para Team Drive
 # [Enter] para Shared Drive ID
 # y para confirmar

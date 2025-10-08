@@ -7,6 +7,87 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.9] - 2025-10-08
+
+### Fixed
+- **Critical**: Fixed cron job not executing automatically in containers
+- Changed from `/etc/cron.d/` to `crontab` for better container compatibility
+- Added wrapper script to properly load environment variables in cron context
+- Added debug logging to show installed crontab contents
+
+### Changed
+- Improved cron reliability in Docker containers
+- Better environment variable handling for scheduled tasks
+
+## [2.0.8] - 2025-10-08
+
+### Added
+- **Automatic cleanup of remote backups** on Google Drive
+- Now removes old backups from remote storage (not just local)
+- Respects `BACKUP_RETENTION` setting for both local and remote cleanup
+
+### Changed
+- Full rebuild without cache to ensure clean build
+- Separated local and remote backup cleanup in logs
+
+## [2.0.7] - 2025-10-08
+
+### Fixed
+- **Timezone display in logs** now correctly shows local time instead of UTC
+- Log timestamps now respect `TZ` environment variable
+
+### Changed
+- Modified `log()` function to explicitly use configured timezone
+
+## [2.0.6] - 2025-10-08
+
+### Fixed
+- **Timezone configuration** now works correctly
+- Added `tzdata` package and proper timezone setup
+- Added `dpkg-reconfigure` for timezone configuration
+
+### Changed
+- Moved timezone configuration to after package installation
+- Added `DEBIAN_FRONTEND=noninteractive` to prevent prompts
+
+## [2.0.5] - 2025-10-08
+
+### Fixed
+- Race condition when multiple backup jobs run simultaneously
+- MySQL config file conflicts between concurrent executions
+
+### Added
+- **Lock file mechanism** (`/var/run/backup.lock`) to prevent concurrent backups
+- Unique temporary MySQL config files per process (`/tmp/mysql_$$.cnf`)
+- Stale lock detection and cleanup
+- Lock acquisition and release logging
+
+### Security
+- Improved concurrent execution safety
+- Better cleanup of temporary files
+
+## [2.0.0] - 2025-10-08
+
+### Changed
+- **BREAKING**: Changed base image from `debian:bookworm-slim` to `ubuntu:18.04`
+- This change provides better compatibility with older MySQL servers (5.5+)
+- MariaDB client version downgraded to 10.1 for compatibility
+
+### Fixed
+- Fixed `generation_expression` errors with older MySQL 5.5 servers
+- Improved mysqldump compatibility across different MySQL versions
+- Better error handling for mysqldump failures
+
+### Added
+- Added `bc` package for numeric calculations
+- Enhanced logging with DEBUG level messages
+- Better tracking of database backup processing
+
+### Technical
+- Simplified mysqldump flags for better compatibility
+- Removed `set -e` during backup loop to handle non-critical errors
+- Added fallback for `numfmt` when not available
+
 ## [1.0.0] - 2025-01-07
 
 ### Added
