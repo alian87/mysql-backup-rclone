@@ -146,7 +146,7 @@ log_success "MySQL is ready"
 
 # Create test databases and data
 log_info "Creating test databases and data..."
-docker exec "$MYSQL_CONTAINER" mysql -u root -ptestpass -e "
+docker exec "$MYSQL_CONTAINER" mysql -u root -ptestpass -h 127.0.0.1 -e "
 CREATE DATABASE IF NOT EXISTS backup_test_db2;
 USE backup_test_db;
 CREATE TABLE IF NOT EXISTS test_table (id INT PRIMARY KEY, name VARCHAR(50));
