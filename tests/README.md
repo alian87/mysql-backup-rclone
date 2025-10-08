@@ -91,7 +91,7 @@ docker run --rm \
   -e MYSQL_HOST=your-mysql-host \
   -e MYSQL_USER=your-user \
   -e MYSQL_PASSWORD=your-password \
-  -e MYSQL_DATABASES=testdb \
+  -e MYSQL_DATABASES=backup_test_db \
   -e RCLONE_REMOTE=gdrive:test \
   -v rclone_config:/root/.config/rclone \
   mysql-backup-rclone /scripts/backup.sh
@@ -103,7 +103,7 @@ docker run --rm \
 # Start MySQL container
 docker run -d --name mysql-test \
   -e MYSQL_ROOT_PASSWORD=testpass \
-  -e MYSQL_DATABASE=testdb \
+  -e MYSQL_DATABASE=backup_test_db \
   mysql:8.0
 
 # Wait for MySQL to start
@@ -114,7 +114,7 @@ docker run --rm --link mysql-test:mysql \
   -e MYSQL_HOST=mysql \
   -e MYSQL_USER=root \
   -e MYSQL_PASSWORD=testpass \
-  -e MYSQL_DATABASES=testdb \
+  -e MYSQL_DATABASES=backup_test_db \
   -e RCLONE_REMOTE=gdrive:test \
   -v rclone_config:/root/.config/rclone \
   mysql-backup-rclone /scripts/backup.sh

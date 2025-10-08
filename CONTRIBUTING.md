@@ -117,7 +117,7 @@ test_new_feature
 
 ```bash
 # Test with different configurations
-docker run --rm -e MYSQL_DATABASES="testdb" ... mysql-backup-rclone:dev
+docker run --rm -e MYSQL_DATABASES="backup_test_db" ... mysql-backup-rclone:dev
 
 # Test error conditions
 docker run --rm -e MYSQL_HOST="invalid" ... mysql-backup-rclone:dev

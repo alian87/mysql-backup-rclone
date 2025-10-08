@@ -20,7 +20,7 @@ services:
       MYSQL_PORT: 3306
       MYSQL_USER: "root"
       MYSQL_PASSWORD: "password123"
-      MYSQL_DATABASES: "testdb,anotherdb"
+      MYSQL_DATABASES: "backup_test_db,anotherdb"
       
       # Rclone Configuration
       RCLONE_REMOTE: "gdrive:backups/mysql"
@@ -75,7 +75,7 @@ services:
     
     environment:
       MYSQL_ROOT_PASSWORD: "password123"
-      MYSQL_DATABASE: "testdb"
+      MYSQL_DATABASE: "backup_test_db"
       MYSQL_USER: "testuser"
       MYSQL_PASSWORD: "testpass"
     

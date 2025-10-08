@@ -121,7 +121,7 @@ docker run -d \
     --name "$MYSQL_CONTAINER" \
     --network "$NETWORK_NAME" \
     -e MYSQL_ROOT_PASSWORD=testpass \
-    -e MYSQL_DATABASE=testdb \
+    -e MYSQL_DATABASE=backup_test_db \
     -e MYSQL_USER=testuser \
     -e MYSQL_PASSWORD=testpass \
     mysql:8.0
@@ -147,11 +147,11 @@ log_success "MySQL is ready"
 # Create test databases and data
 log_info "Creating test databases and data..."
 docker exec "$MYSQL_CONTAINER" mysql -u root -ptestpass -e "
-CREATE DATABASE IF NOT EXISTS testdb2;
-USE testdb;
+CREATE DATABASE IF NOT EXISTS backup_test_db2;
+USE backup_test_db;
 CREATE TABLE IF NOT EXISTS test_table (id INT PRIMARY KEY, name VARCHAR(50));
 INSERT INTO test_table VALUES (1, 'test1'), (2, 'test2') ON DUPLICATE KEY UPDATE name=VALUES(name);
-USE testdb2;
+USE backup_test_db2;
 CREATE TABLE IF NOT EXISTS test_table2 (id INT PRIMARY KEY, value VARCHAR(50));
 INSERT INTO test_table2 VALUES (1, 'value1'), (2, 'value2') ON DUPLICATE KEY UPDATE value=VALUES(value);
 "
@@ -176,7 +176,7 @@ docker run -d \
     -e MYSQL_PORT=3306 \
     -e MYSQL_USER=root \
     -e MYSQL_PASSWORD=testpass \
-    -e MYSQL_DATABASES="testdb,testdb2" \
+    -e MYSQL_DATABASES="backup_test_db,backup_test_db2" \
     -e RCLONE_REMOTE="gdrive:test-backups" \
     -e CRON_SCHEDULE="* * * * *" \
     -e BACKUP_RETENTION=2 \
