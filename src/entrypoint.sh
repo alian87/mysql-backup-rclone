@@ -3,7 +3,7 @@
 # Initializes the backup container and starts the cron service
 # 
 # Author: Alian
-# Version: 2.0.9
+# Version: 2.1.0
 # License: MIT
 
 set -euo pipefail

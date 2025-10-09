@@ -7,6 +7,17 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Não Lançado]
 
+## [2.1.0] - 2025-10-09
+
+### Corrigido
+- **Crítico**: Corrigida limpeza de backups locais que não estava funcionando (falha no comando `head -z`)
+- Substituído pipeline quebrado `find | sort -z | head -n -N` por abordagem com array `mapfile`
+- Backups locais agora são removidos corretamente de acordo com a configuração `BACKUP_RETENTION`
+
+### Alterado
+- Melhorada lógica de limpeza de backups locais para maior confiabilidade
+- Tratamento mais robusto da limpeza de diretórios de backup
+
 ## [2.0.9] - 2025-10-08
 
 ### Corrigido

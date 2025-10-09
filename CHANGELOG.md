@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2025-10-09
+
+### Fixed
+- **Critical**: Fixed local backup cleanup not working (command failure with `head -z`)
+- Replaced broken `find | sort -z | head -n -N` pipeline with `mapfile` array approach
+- Local backups are now properly cleaned up according to `BACKUP_RETENTION` setting
+
+### Changed
+- Improved local backup cleanup logic for better reliability
+- More robust handling of backup directory cleanup
+
 ## [2.0.9] - 2025-10-08
 
 ### Fixed

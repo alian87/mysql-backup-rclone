@@ -3,7 +3,7 @@
 # Automated backup of MySQL databases to Google Drive
 # 
 # Author: Alian
-# Version: 2.0.9
+# Version: 2.1.0
 # License: MIT
 
 set -euo pipefail
@@ -240,13 +240,17 @@ EOF
     log "INFO" ""
     log "INFO" "🧹 Cleaning up old local backups (keeping last $retention)..."
     local local_cleaned=0
-    while IFS= read -r -d '' dir; do
-        if [ -d "$dir" ]; then
+    
+    # Get all backup directories, sort them, and keep only the oldest ones to delete
+    mapfile -t old_backups < <(find "$BACKUP_DIR" -maxdepth 1 -type d -name "20*" | sort | head -n -$retention)
+    
+    for dir in "${old_backups[@]}"; do
+        if [ -n "$dir" ] && [ -d "$dir" ]; then
             rm -rf "$dir"
             ((local_cleaned++))
             log "DEBUG" "Removed old local backup: $(basename "$dir")"
         fi
-    done < <(find "$BACKUP_DIR" -maxdepth 1 -type d -name "20*" -print0 | sort -z | head -n -$retention)
+    done
     
     if [ $local_cleaned -gt 0 ]; then
         log "INFO" "🧹 Cleaned up $local_cleaned old local backup(s)"

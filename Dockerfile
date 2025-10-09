@@ -9,7 +9,7 @@ FROM ubuntu:18.04
 # Metadata
 LABEL maintainer="Alian <alian.v.p.87@gmail.com>"
 LABEL description="Automated MySQL backup to Google Drive using Rclone"
-LABEL version="2.0.9"
+LABEL version="2.1.0"
 LABEL org.opencontainers.image.source="https://github.com/alian87/mysql-backup-rclone"
 
 # Environment variables with defaults
