@@ -7,6 +7,18 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Não Lançado]
 
+## [2.1.1] - 2025-10-09
+
+### Corrigido
+- **CRÍTICO**: Corrigido envio de notificações webhook que não estavam sendo enviadas
+- **CRÍTICO**: Corrigido script terminando prematuramente antes de completar o resumo do backup
+- Removida chamada `exit` da função `cleanup()` que causava terminação prematura
+- Backup agora completa todas as etapas: limpeza local, limpeza remota, resumo e notificações
+
+### Alterado
+- Função cleanup não força mais o exit do script, permitindo terminação natural
+- Script agora completa todas as fases incluindo entrega de notificações
+
 ## [2.1.0] - 2025-10-09
 
 ### Corrigido

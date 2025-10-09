@@ -3,7 +3,7 @@
 # Automated backup of MySQL databases to Google Drive
 # 
 # Author: Alian
-# Version: 2.1.0
+# Version: 2.1.1
 # License: MIT
 
 set -euo pipefail
@@ -46,8 +46,6 @@ notify() {
 
 # Cleanup function
 cleanup() {
-    local exit_code=$?
-    
     # Remove temporary MySQL config file
     if [ -f "$MYSQL_CNF" ]; then
         rm -f "$MYSQL_CNF"
@@ -60,7 +58,7 @@ cleanup() {
         log "DEBUG" "Released backup lock"
     fi
     
-    exit $exit_code
+    # Don't exit here - let the script continue or terminate naturally
 }
 
 # Set trap for cleanup

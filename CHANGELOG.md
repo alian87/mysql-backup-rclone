@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.1] - 2025-10-09
+
+### Fixed
+- **CRITICAL**: Fixed webhook notifications not being sent
+- **CRITICAL**: Fixed script terminating prematurely before completing backup summary
+- Removed `exit` call from `cleanup()` function that was causing early termination
+- Backup now properly completes all steps: local cleanup, remote cleanup, summary, and notifications
+
+### Changed
+- Cleanup function no longer forces script exit, allowing natural termination
+- Script now completes all phases including notification delivery
+
 ## [2.1.0] - 2025-10-09
 
 ### Fixed
