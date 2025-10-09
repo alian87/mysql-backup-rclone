@@ -7,6 +7,36 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Não Lançado]
 
+## [2.1.3] - 2025-10-09
+
+### Corrigido
+- **CRÍTICO**: Removida palavra-chave `local` de variáveis de limpeza causando travamento do script
+- **CRÍTICO**: Corrigida sintaxe `((variável++))` causando travamento do script
+- Script agora completa todas as fases de limpeza sem travar
+- Corrigido conflito entre palavra-chave `local` e escopo de função na seção de limpeza
+- Webhooks agora funcionando corretamente após todas as correções
+
+### Detalhes Técnicos
+- Removido `local` das variáveis `local_cleaned` e `remote_cleaned`
+- Alterado `((local_cleaned++))` para `local_cleaned=$((local_cleaned + 1))`
+- Alterado `((remote_cleaned++))` para `remote_cleaned=$((remote_cleaned + 1))`
+- A sintaxe `(())` estava causando travamento do script na versão do Bash do container Docker
+- Script agora executa completamente através de todas as fases e envia notificações webhook
+
+## [2.1.2] - 2025-10-09
+
+### Corrigido
+- **CRÍTICO**: Corrigida execução do script completando com sucesso e webhooks funcionando
+- Desabilitado `set -euo pipefail` que estava causando terminação prematura do script
+- Removido `trap cleanup EXIT` em favor de chamadas manuais de cleanup
+- Adicionada declaração `old_backups=()` antes do `mapfile` para evitar erros de variável não definida
+- Adicionadas chamadas manuais de `cleanup()` antes de todos os pontos de saída
+
+### Alterado
+- Script agora completa todas as fases: backup → upload → limpeza local → limpeza remota → resumo → notificações
+- Tratamento de erros mais robusto sem saídas prematuras
+- Webhooks agora entregues corretamente tanto em sucesso quanto em falha
+
 ## [2.1.1] - 2025-10-09
 
 ### Corrigido

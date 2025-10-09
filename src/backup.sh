@@ -3,10 +3,11 @@
 # Automated backup of MySQL databases to Google Drive
 # 
 # Author: Alian
-# Version: 2.1.1
+# Version: 2.1.3
 # License: MIT
 
-set -euo pipefail
+# Note: set -euo pipefail disabled to prevent premature exits during cleanup
+# set -euo pipefail
 
 # Lock file to prevent concurrent executions
 LOCK_FILE="/var/run/backup.lock"
@@ -61,8 +62,8 @@ cleanup() {
     # Don't exit here - let the script continue or terminate naturally
 }
 
-# Set trap for cleanup
-trap cleanup EXIT
+# Note: trap cleanup EXIT disabled - cleanup is called manually before exit points
+# trap cleanup EXIT
 
 # Check for concurrent execution
 if [ -f "$LOCK_FILE" ]; then
@@ -94,12 +95,14 @@ main() {
     # Validate required variables
     if [ -z "${MYSQL_DATABASES:-}" ]; then
         log "ERROR" "MYSQL_DATABASES is not set"
+        cleanup
         notify "error" "Backup failed: MYSQL_DATABASES not configured"
         exit 1
     fi
     
     if [ -z "${RCLONE_REMOTE:-}" ]; then
         log "ERROR" "RCLONE_REMOTE is not set"
+        cleanup
         notify "error" "Backup failed: RCLONE_REMOTE not configured"
         exit 1
     fi
@@ -120,6 +123,7 @@ EOF
     if ! mysql --defaults-extra-file="$MYSQL_CNF" -e "SELECT 1" > /dev/null 2>&1; then
         log "ERROR" "Cannot connect to MySQL"
         log "ERROR" "Host: ${MYSQL_HOST:-localhost}:${MYSQL_PORT:-3306} | User: ${MYSQL_USER:-root}"
+        cleanup
         notify "error" "Backup failed: Cannot connect to MySQL"
         exit 1
     fi
@@ -230,6 +234,7 @@ EOF
         log "INFO" "✅ Upload completed successfully"
     else
         log "ERROR" "Failed to upload to Google Drive"
+        cleanup
         notify "error" "Backup failed: Upload to Google Drive failed"
         exit 1
     fi
@@ -237,15 +242,16 @@ EOF
     # Clean up old local backups
     log "INFO" ""
     log "INFO" "🧹 Cleaning up old local backups (keeping last $retention)..."
-    local local_cleaned=0
+    local_cleaned=0
     
     # Get all backup directories, sort them, and keep only the oldest ones to delete
-    mapfile -t old_backups < <(find "$BACKUP_DIR" -maxdepth 1 -type d -name "20*" | sort | head -n -$retention)
+    old_backups=()  # Declare array before mapfile to avoid unbound variable error
+    mapfile -t old_backups < <(find "$BACKUP_DIR" -maxdepth 1 -type d -name "20*" 2>/dev/null | sort | head -n -$retention) || true
     
     for dir in "${old_backups[@]}"; do
         if [ -n "$dir" ] && [ -d "$dir" ]; then
             rm -rf "$dir"
-            ((local_cleaned++))
+            local_cleaned=$((local_cleaned + 1))
             log "DEBUG" "Removed old local backup: $(basename "$dir")"
         fi
     done
@@ -256,14 +262,14 @@ EOF
     
     # Clean up old remote backups
     log "INFO" "🧹 Cleaning up old remote backups (keeping last $retention)..."
-    local remote_cleaned=0
+    remote_cleaned=0
     
     # Get list of remote backup directories, sort them, and keep only the oldest ones to delete
     while IFS= read -r backup_dir; do
         if [ -n "$backup_dir" ]; then
             log "DEBUG" "Removing old remote backup: $backup_dir"
             if rclone purge "$RCLONE_REMOTE/$backup_dir" --config /root/.config/rclone/rclone.conf > /dev/null 2>&1; then
-                ((remote_cleaned++))
+                remote_cleaned=$((remote_cleaned + 1))
                 log "DEBUG" "✅ Removed remote backup: $backup_dir"
             else
                 log "WARN" "Failed to remove remote backup: $backup_dir"
@@ -286,6 +292,9 @@ EOF
     log "INFO" "💾 Total size: $total_size_human"
     log "INFO" "🕐 Completed at: $(date '+%Y-%m-%d %H:%M:%S')"
     log "INFO" "════════════════════════════════════════════"
+    
+    # Cleanup before notifications
+    cleanup
     
     # Send notifications
     if [ $backup_failed -gt 0 ]; then

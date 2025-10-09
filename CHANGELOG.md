@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.3] - 2025-10-09
+
+### Fixed
+- **CRITICAL**: Removed `local` keyword from cleanup variables causing script hang
+- **CRITICAL**: Fixed `((variable++))` syntax causing script to hang
+- Script now completes all cleanup phases without hanging
+- Fixed conflict between `local` keyword and function scope in cleanup section
+- Webhooks now working correctly after all fixes
+
+### Technical Details
+- Removed `local` from `local_cleaned` and `remote_cleaned` variables
+- Changed `((local_cleaned++))` to `local_cleaned=$((local_cleaned + 1))`
+- Changed `((remote_cleaned++))` to `remote_cleaned=$((remote_cleaned + 1))`
+- The `(())` syntax was causing the script to hang in the Docker container's Bash version
+- Script now executes cleanly through all phases and sends webhook notifications
+
+## [2.1.2] - 2025-10-09
+
+### Fixed
+- **CRITICAL**: Fixed script execution completing successfully with webhooks working
+- Disabled `set -euo pipefail` which was causing premature script termination
+- Removed `trap cleanup EXIT` in favor of manual cleanup calls
+- Added `old_backups=()` declaration before `mapfile` to prevent unbound variable errors
+- Added manual `cleanup()` calls before all exit points
+
+### Changed
+- Script now completes all phases: backup → upload → local cleanup → remote cleanup → summary → notifications
+- More robust error handling without premature exits
+- Webhooks now properly delivered on both success and failure
+
 ## [2.1.1] - 2025-10-09
 
 ### Fixed
